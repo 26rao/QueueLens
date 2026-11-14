@@ -28,6 +28,8 @@ def client():
 
     db = TestingSessionLocal()
     seed_database(db)
+    from app.seed import run_initial_optimization
+    run_initial_optimization(db)
     db.close()
 
     with TestClient(app) as c:
@@ -40,3 +42,14 @@ def client():
             os.remove("./test_queuelens.db")
     except OSError:
         pass
+
+
+@pytest.fixture
+def db_session(client):
+    from app.seed import reset_scenario
+    db = TestingSessionLocal()
+    reset_scenario(db)
+    try:
+        yield db
+    finally:
+        db.close()

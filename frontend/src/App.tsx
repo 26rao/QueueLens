@@ -11,6 +11,8 @@ import { AnalyticsCharts } from './components/dashboard/AnalyticsCharts';
 import { DisruptionPanel } from './components/disruption/DisruptionPanel';
 import { ImpactComparison } from './components/disruption/ImpactComparison';
 import { SimulationControls } from './components/simulation/SimulationControls';
+import { OperatingModeSelector } from './components/simulation/OperatingMode';
+import { LiveActivityFeed } from './components/dashboard/LiveActivityFeed';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -72,7 +74,14 @@ export default function App() {
             </div>
           )}
           
-          <SimulationControls simulation={state.simulation} onRefresh={q.fetchState} />
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <OperatingModeSelector
+              currentMode={q.operatingMode}
+              enabled={q.modeEnabled}
+              onSelectMode={q.setOperatingMode}
+            />
+            <SimulationControls simulation={state.simulation} onRefresh={q.fetchState} />
+          </div>
           
           <MetricsCards
             metrics={state.metrics}
@@ -88,13 +97,20 @@ export default function App() {
                 affectedPatients={q.preview?.affected_patients}
               />
             </div>
-            <div>
+            <div className="space-y-6 flex flex-col">
               <DoctorStatus
                 doctors={state.doctors}
                 appointments={state.appointments}
                 currentMinute={state.simulation?.current_minute ?? 0}
                 utilization={state.metrics?.doctor_utilization ?? {}}
               />
+              <div className="flex-1 min-h-[300px]">
+                <LiveActivityFeed
+                  events={q.events}
+                  mode={q.operatingMode}
+                  enabled={q.modeEnabled}
+                />
+              </div>
             </div>
           </div>
           

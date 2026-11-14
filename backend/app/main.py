@@ -10,12 +10,13 @@ from .database import Base, SessionLocal, engine
 from .models import (  # noqa: F401 - needed for Base.metadata.create_all
     Appointment, Disruption, Doctor, DoctorUnavailability,
     Patient, ScheduleVersion, SimulationState,
+    SyntheticEvent, SyntheticGeneratorState,
 )
 from .seed import seed_database, run_initial_optimization
 from .services.event_manager import manager
 from .services.simulation_service import start_simulation, stop_simulation
 
-from .api import analytics, disruptions, doctors, optimization, patients, simulation, state
+from .api import analytics, disruptions, doctors, events, optimization, patients, simulation, state
 
 
 @asynccontextmanager
@@ -117,6 +118,7 @@ app.include_router(disruptions.router, prefix="/api")
 app.include_router(optimization.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(simulation.router, prefix="/api")
+app.include_router(events.router, prefix="/api")
 
 
 @app.get("/api/health")

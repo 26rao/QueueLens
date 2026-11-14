@@ -80,3 +80,28 @@ class ScheduleVersion(Base):
     solver_status = Column(String, nullable=False)
     objective_value = Column(Float, nullable=True)
     trigger = Column(String, nullable=False)
+
+
+class SyntheticEvent(Base):
+    __tablename__ = "synthetic_events"
+
+    id = Column(String, primary_key=True)
+    event_type = Column(String, nullable=False)
+    simulation_minute = Column(Integer, nullable=False)
+    description = Column(String, nullable=False)
+    payload_json = Column(JSON, nullable=False)
+    status = Column(String, nullable=False, default="pending")
+    state_version = Column(Integer, nullable=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
+
+
+class SyntheticGeneratorState(Base):
+    __tablename__ = "synthetic_generator_state"
+
+    id = Column(String, primary_key=True, default="singleton")
+    enabled = Column(Boolean, nullable=False, default=False)
+    mode = Column(String, nullable=False, default="manual")
+    seed = Column(Integer, nullable=False, default=42)
+    next_event_index = Column(Integer, nullable=False, default=0)
+    last_processed_minute = Column(Integer, nullable=False, default=0)
+

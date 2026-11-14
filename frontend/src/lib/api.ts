@@ -39,4 +39,11 @@ export const api = {
     request<any>('/simulation/pause', { method: 'POST', body: '{}' }),
   createPatient: (patient: any) =>
     request<any>('/patients', { method: 'POST', body: JSON.stringify(patient) }),
+  getEvents: (limit: number = 30) =>
+    request<any>(`/events?limit=${limit}`),
+  setSimulationMode: (mode: string, enabled: boolean) =>
+    request<any>('/simulation/mode', {
+      method: 'POST',
+      body: JSON.stringify({ mode, enabled }),
+    }),
 };

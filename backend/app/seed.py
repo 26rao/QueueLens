@@ -4,7 +4,7 @@ import uuid
 
 from .models import (
     Appointment, Disruption, Doctor, DoctorUnavailability,
-    Patient, ScheduleVersion, SimulationState,
+    Patient, ScheduleVersion, SimulationState, SyntheticEvent, SyntheticGeneratorState,
 )
 
 
@@ -50,6 +50,14 @@ def seed_database(db):
         solver_status="pending",
         objective_value=None,
         trigger="seed",
+    ))
+    db.add(SyntheticGeneratorState(
+        id="singleton",
+        enabled=False,
+        mode="manual",
+        seed=42,
+        next_event_index=0,
+        last_processed_minute=0,
     ))
     db.commit()
 
@@ -112,6 +120,8 @@ def reset_scenario(db, planning_horizon=480):
     db.query(Doctor).delete()
     db.query(ScheduleVersion).delete()
     db.query(SimulationState).delete()
+    db.query(SyntheticEvent).delete()
+    db.query(SyntheticGeneratorState).delete()
     db.commit()
 
     seed_database(db)

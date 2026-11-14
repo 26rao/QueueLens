@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 venv/
 *.db
+*.db.bak
 .env
 node_modules/
 dist/

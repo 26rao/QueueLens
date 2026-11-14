@@ -1,3 +1,4 @@
+import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
@@ -132,3 +133,26 @@ class OptimizeResponse(BaseModel):
     objective_value: Optional[float] = None
     execution_time_ms: float
     state_version: int
+
+
+class SyntheticEventRead(BaseModel):
+    id: str
+    event_type: str
+    simulation_minute: int
+    description: str
+    payload_json: Dict[str, Any]
+    status: str
+    state_version: Optional[int] = None
+    created_at: Optional[datetime.datetime] = None
+
+
+class EventListResponse(BaseModel):
+    events: List[SyntheticEventRead]
+    mode: str
+    enabled: bool
+
+
+class SimulationModeRequest(BaseModel):
+    mode: str  # manual, live_synthetic, replay
+    enabled: Optional[bool] = None
+

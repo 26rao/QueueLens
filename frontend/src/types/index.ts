@@ -95,3 +95,22 @@ export interface PreviewResponse {
   affected_patients: string[];
   unscheduled_patients: string[];
 }
+
+export type OperatingMode = 'manual' | 'live_synthetic' | 'replay';
+
+export interface SyntheticEvent {
+  id: string;
+  event_type: string;
+  simulation_minute: number;
+  description: string;
+  payload_json: Record<string, unknown>;
+  status: string;
+  state_version: number;
+  created_at?: string;
+}
+
+export interface EventListResponse {
+  events: SyntheticEvent[];
+  mode: OperatingMode;
+  enabled: boolean;
+}

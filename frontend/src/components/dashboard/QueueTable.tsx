@@ -53,7 +53,7 @@ export function QueueTable({ patients, doctors, appointments, affectedPatients =
         />
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[620px]">
           <thead>
             <tr className="bg-gray-50 text-gray-500 text-xs uppercase">
               {[

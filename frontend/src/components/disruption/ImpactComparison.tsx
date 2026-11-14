@@ -48,16 +48,20 @@ export function ImpactComparison({ preview, applyLoading, onApply, onCancel }: I
         </div>
       </div>
       <div className="p-5 space-y-4">
-        <div className="grid grid-cols-4 gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider pb-2 border-b border-gray-200">
-          <div>Metric</div>
-          <div>Pre-Disruption</div>
-          <div>Baseline (Disrupted)</div>
-          <div>QueueLens Optimized</div>
+        <div className="overflow-x-auto">
+          <div className="min-w-[500px]">
+            <div className="grid grid-cols-4 gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider pb-2 border-b border-gray-200">
+              <div>Metric</div>
+              <div>Pre-Disruption</div>
+              <div>Baseline (Disrupted)</div>
+              <div>QueueLens Optimized</div>
+            </div>
+            <MetricRow label="Avg Waiting Time (min)" before={bm.avg_wait} baseline={blm?.avg_wait} after={am.avg_wait} />
+            <MetricRow label="Max Waiting Time (min)" before={bm.max_wait} baseline={blm?.max_wait} after={am.max_wait} />
+            <MetricRow label="Scheduled Patients" before={bm.scheduled_count} baseline={blm?.scheduled_count} after={am.scheduled_count} />
+            <MetricRow label="Unscheduled Patients" before={bm.unscheduled_count} baseline={blm?.unscheduled_count} after={am.unscheduled_count} />
+          </div>
         </div>
-        <MetricRow label="Avg Waiting Time (min)" before={bm.avg_wait} baseline={blm?.avg_wait} after={am.avg_wait} />
-        <MetricRow label="Max Waiting Time (min)" before={bm.max_wait} baseline={blm?.max_wait} after={am.max_wait} />
-        <MetricRow label="Scheduled Patients" before={bm.scheduled_count} baseline={blm?.scheduled_count} after={am.scheduled_count} />
-        <MetricRow label="Unscheduled Patients" before={bm.unscheduled_count} baseline={blm?.unscheduled_count} after={am.unscheduled_count} />
         
         {preview.affected_patients && preview.affected_patients.length > 0 && (
           <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">

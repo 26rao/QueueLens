@@ -60,6 +60,7 @@ export interface SimulationState {
 
 export interface DashboardState {
   state_version: number;
+  solver_status?: string;
   simulation: SimulationState;
   patients: Patient[];
   doctors: Doctor[];

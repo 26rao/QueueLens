@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQueueState } from './hooks/useQueueState';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -14,6 +15,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const q = useQueueState();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   if (q.loading) {
     return (
@@ -53,15 +55,16 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
+      <Sidebar isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0">
         <Header
           currentMinute={state.simulation?.current_minute ?? 0}
           wsConnected={q.wsConnected}
           onReset={q.reset}
           stateVersion={state.state_version}
+          onToggleSidebar={() => setMobileNavOpen(o => !o)}
         />
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 p-3 sm:p-6 space-y-5 sm:space-y-6 overflow-y-auto max-w-[1600px] w-full mx-auto">
           {q.error && (
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm flex items-center justify-between">
               <span>{q.error}</span>
@@ -71,7 +74,10 @@ export default function App() {
           
           <SimulationControls simulation={state.simulation} onRefresh={q.fetchState} />
           
-          <MetricsCards metrics={state.metrics} solverStatus={q.preview?.solver_status} />
+          <MetricsCards
+            metrics={state.metrics}
+            solverStatus={q.preview?.solver_status || state.solver_status || 'OPTIMAL'}
+          />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">

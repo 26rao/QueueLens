@@ -189,9 +189,18 @@ async def apply_disruption(body: ApplyRequest, db: Session = Depends(get_db)):
             schedule_version_after=new_version,
         ))
 
-    # Increment state version
+    # Increment state version and record schedule version
     if sim:
         sim.state_version = new_version
+
+    from ..models import ScheduleVersion
+    db.add(ScheduleVersion(
+        version=new_version,
+        created_at=datetime.datetime.utcnow(),
+        solver_status=opt_result["solver_status"],
+        objective_value=opt_result.get("objective_value"),
+        trigger="disruption_applied",
+    ))
 
     db.commit()
 

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import Appointment, Disruption, Doctor, DoctorUnavailability, Patient, SimulationState
+from ..models import Appointment, Disruption, Doctor, DoctorUnavailability, Patient, ScheduleVersion, SimulationState
 from ..services.metrics import compute_metrics
 
 router = APIRouter()
@@ -17,6 +17,10 @@ def get_state(db: Session = Depends(get_db)):
     doctors = db.query(Doctor).all()
     appointments = db.query(Appointment).filter(Appointment.status != "cancelled").all()
     unavailabilities = db.query(DoctorUnavailability).all()
+
+    current_ver = sim.state_version if sim else 1
+    sv = db.query(ScheduleVersion).filter(ScheduleVersion.version == current_ver).first()
+    solver_status = sv.solver_status if sv else "OPTIMAL"
 
     recent = db.query(Disruption).order_by(Disruption.created_at.desc()).limit(10).all()
     alerts = []
@@ -39,6 +43,7 @@ def get_state(db: Session = Depends(get_db)):
 
     return {
         "state_version": sim.state_version if sim else 1,
+        "solver_status": solver_status,
         "simulation": {
             "current_minute": sim.current_minute if sim else 0,
             "speed": sim.speed if sim else 1,
